@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/devops-audit.py",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/bash-validation-hook.py",
+        "timeoutSec": 60
+      }
+    ]
+  }
+}

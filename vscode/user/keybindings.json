@@ -1,0 +1,18 @@
+[
+    {
+        "key": "ctrl+s",
+        "command": "workbench.action.files.save"
+    },
+    {
+        "key": "ctrl+k ctrl+s",
+        "command": "workbench.action.openGlobalKeybindings"
+    },
+    {
+        "key": "ctrl+alt+shift+f",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "Investigate and fix the issue below using evidence-based verification.\n\n1. Read the affected repository files and logs before proposing changes.\n2. For Microsoft technologies, search and read relevant Microsoft Learn documentation using available tools. Cite the exact supporting pages and distinguish documented requirements from recommendations.\n3. Verify supported syntax, task versions, inputs, prerequisites, variable scope, and limitations.\n4. Apply the smallest complete fix and inspect all occurrences of the defect.\n5. Run available safe syntax checks and tests. For pipelines, check YAML parsing, Bash syntax, Python compilation, repository paths, cache-directory prerequisites, and branch/environment routing. Distinguish YAML parsing from Azure Pipelines schema/template validation.\n6. Review the complete fix a second time for truncation, quoting, indentation, unsupported inputs, and unintended behavior changes.\n7. Preserve authentication, secrets, approvals, validation, and error handling. Do not print secrets or bypass checks to hide failures.\n8. Do not add Markdown files to the project. Do not deploy, commit, push, or change cloud resources unless explicitly requested.\n9. Return the root cause, changes, complete corrected content when requested, documentation references, and verification results marked PASS, FAIL, or NOT RUN. Never claim checks that were not performed. Clearly report unavailable tools and remaining risks.\n\nIssue details: ",
+            "isPartialQuery": true
+        }
+    }
+]

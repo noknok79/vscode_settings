@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/devops-extra-checks.py git",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/devops-extra-checks.py terraform",
+        "timeoutSec": 8
+      }
+    ]
+  }
+}

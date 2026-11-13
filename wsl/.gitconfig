@@ -1,0 +1,17 @@
+[safe]
+	directory = /mnt/c/acnproject/dbg/dbg-indispensable-api
+	directory = /mnt/c/acnproject/dbg/dbg-crm-sync-functions
+	directory = /mnt/c/acnproject/dbg/dbg-aimodernisation-foundry-ai
+	directory = /mnt/c/acnproject/dbg/dbg-datamodernisation-fabric-dataplatform
+	directory = /mnt/c/acnproject/dbg/dbg-fabricdatamodernisation-applandingzones-infra
+	directory = /mnt/c/acnproject/dbg-platform-release
+	directory = /mnt/c/acnproject/dbg/dbg-indispensable-ui
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[user]
+	name = Mark Villanueva
+	email = x-mark.villanueva@dbg.com

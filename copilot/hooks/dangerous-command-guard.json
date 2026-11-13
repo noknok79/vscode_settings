@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/dangerous-command-guard.py",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

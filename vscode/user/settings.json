@@ -1,0 +1,60 @@
+{
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "/bin/bash",
+      "args": [
+        "-i"
+      ],
+      "icon": "terminal-bash"
+    },
+    "Ubuntu Root": {
+      "path": "/bin/bash",
+      "args": [
+        "-i"
+      ],
+      "icon": "terminal-ubuntu"
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "Ubuntu Root",
+  "files.autoSave": "off",
+  "files.trimTrailingWhitespace": false,
+  "files.insertFinalNewline": false,
+  "files.trimFinalNewlines": false,
+  "files.hotExit": "off",
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.detectIndentation": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.organizeImports": "never"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "git.enabled": true,
+  "git.autofetch": false,
+  "git.confirmSync": true,
+  "git.rebaseWhenSync": false,
+  "git.enableSmartCommit": false,
+  "editor.renderWhitespace": "selection",
+  "editor.renderControlCharacters": true,
+  "editor.wordWrap": "off",
+  "editor.minimap.enabled": false,
+  "workbench.colorTheme": "Dark+",
+  "redhat.telemetry.enabled": true,
+  "@azure.argTenant": "",
+  "chat.customizations.mcpServerMigration.enabled": true,
+  "azureMcp.serverMode": "single",
+  "chat.agentFilesLocations": {
+    "/root/.copilot/agents": true
+  },
+  "chat.instructionsFilesLocations": {
+    "/root/.copilot/instructions": true
+  },
+  "chat.promptFilesLocations": {
+    "/root/.copilot/prompts": true
+  },
+  "chat.agentSkillsLocations": {
+    "/root/.copilot/skills": true
+  }
+}

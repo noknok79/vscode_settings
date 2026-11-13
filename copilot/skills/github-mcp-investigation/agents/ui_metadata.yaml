@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub MCP Investigation"
+  short_description: "Read-only GitHub repository and CI investigations using authorized MCP tools"

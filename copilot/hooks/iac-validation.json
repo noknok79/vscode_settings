@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "python3 /root/.copilot/hooks/iac-validation.py",
+        "timeoutSec": 12
+      }
+    ]
+  }
+}
