@@ -1,6 +1,6 @@
 # Unified VS Code + GitHub Copilot Backup, Verification and Restoration
 
-**Updated:** 13 November 2026  
+**Updated:** 13 November 2026 (automated restoration quick-start edition)  
 **Repository:** `noknok79/vscode_settings` (`main`)  
 **Verified recovery commit:** `31ddb70dbffba778d85082afb88436152b32d353`  
 **Target:** Windows VS Code Stable + WSL Ubuntu (`root`, `/root/.copilot`)  
@@ -12,11 +12,117 @@
 
 | Goal | Sections |
 |---|---|
+| **Start a fresh-machine restoration** | **Quick Start**, then 2–4 and 11 |
 | Restore Windows VS Code and WSL Copilot configuration | 2–6, 11 |
 | Restore DevSecOps skill **and applications** | 2–3, 7, **7.1**, 11 |
 | Restore Technical Writer | 2–3, 8, 11 |
 | Use six-phase script/pipeline refactoring | 9 |
 | Maintain and back up future changes | 10 |
+
+## Quick Start: Efficient Installation and Restoration
+
+**Recommended design:** One **Windows PowerShell entry point** coordinates the existing Bash/Python restoration scripts. Bash installs Linux DevSecOps tools in WSL. No Makefile or Ansible is required.
+
+> **Current vs planned:** The existing launcher command is `Restore-Copilot.ps1 -Distro Ubuntu`, with interactive `PREPARE`, `RESTORE`, and optional `INSTALL` approvals. The proposed `-Mode Audit`, `-Mode Install`, `-Mode Restore`, and `-Mode Full` interfaces, plus `install/install-devsecops.sh` and `install/tools.conf`, are **not implemented or verified in the published 230-file baseline**. Do not run them as if they already work.
+
+### Quick Start A. Prepare Windows and WSL
+
+1. Install Windows VS Code Stable, WSL Ubuntu, and the VS Code WSL extension using official installers and authorized package sources. On a new Windows machine, install WSL using the supported `wsl --install` procedure if not already present. Restart when prompted.
+2. Open standalone Windows PowerShell and check the installed WSL distribution and VS Code command:
+
+```powershell
+wsl.exe --list --verbose
+Get-Command code.cmd -ErrorAction SilentlyContinue
+$PSVersionTable.PSVersion
+```
+
+3. Select the actual distro name, for example `Ubuntu` or `Ubuntu-24.04`, and verify the Linux account:
+
+```powershell
+wsl.exe --distribution Ubuntu --user root --exec whoami
+wsl.exe --distribution Ubuntu --user root --exec printenv HOME
+```
+
+4. Set up the approved `github-noknok79` SSH identity in WSL without overwriting another GitHub identity. Verify the published GitHub host-key fingerprint and repository access. Do not copy private keys or OAuth tokens from Git.
+
+### Quick Start B. Obtain the restoration scripts
+
+The **existing** launcher requires `Restore-Copilot.ps1`, `restore.sh`, and `restore_files.py` together in a **Windows-accessible working directory**. You may obtain them from the reviewed sanitized repository, but inspect their content before executing anything. The repository's `copilot/`, `vscode/`, and `wsl/` directories are the backup payload, not a substitute for the launcher.
+
+If cloning from WSL, use the verification procedure in Section 3. For a Windows PowerShell launcher, select a reviewed directory that Windows can access, such as a folder on the Windows filesystem or an accessible WSL share. **Do not assume a Linux `/root/...` path is a native Windows PowerShell path.**
+
+### Quick Start C. Run the existing PowerShell launcher
+
+From **standalone Windows PowerShell**, in the directory containing the three scripts:
+
+```powershell
+$Required = @('Restore-Copilot.ps1','restore.sh','restore_files.py')
+foreach ($Name in $Required) {
+    if (-not (Test-Path -LiteralPath (Join-Path (Get-Location) $Name) -PathType Leaf)) {
+        throw "Missing restoration file: $Name"
+    }
+}
+.\Restore-Copilot.ps1 -Distro Ubuntu
+```
+
+Replace `Ubuntu` with the exact distro name. Follow the actual prompts:
+
+1. Type **`PREPARE`** only after reviewing prerequisites, source identity, and clone plan.
+2. Inspect the generated file plan, source commit, target paths, hooks, MCP commands, and existing files from a separate terminal.
+3. Type **`RESTORE`** only after approving the proposed replacements. Preserve the printed rollback directory.
+4. Approve optional **`INSTALL`** or selected extensions only if required and authorized. Extension scope matters: Windows Local and WSL are different.
+5. Read the verification report. Do not claim runtime success from matching file hashes alone.
+
+**Failure rule:** Stop on an error, retain the run directory, review `rollback.json`, and use the documented rollback path. Never bypass enterprise PowerShell execution policy or automatically delete a working configuration.
+
+### Quick Start D. Install DevSecOps applications in WSL
+
+The launcher restores configuration, but the published baseline **does not include a verified all-in-one DevSecOps installer**. Follow Section **7.1** for approved installation of missing Bash, Python, ShellCheck, Terraform, TFLint, Checkov, Trivy, Gitleaks, Helm, kubectl, and Azure CLI tools as applicable.
+
+Use the read-only dependency audit in Section 7.1.12 **before installing**. Install only missing, project-required tools, one vendor-supported method at a time. Never assume Docker, PowerShell, Bicep, or every optional scanner is required.
+
+### Quick Start E. Verify functionality
+
+After restoration:
+
+- Confirm the WSL user, Copilot account, VS Code profile, and Windows/WSL extension scopes.
+- Compare restored files to the selected Git snapshot with SHA-256.
+- Check executable modes and run relevant Bash/Python syntax tests.
+- Confirm agents, prompts, instructions, and skills are discoverable in the **intended** Copilot runtime.
+- Test `/simplify-pipeline` on a safe sample and verify that it stops after the proposal.
+- Run a non-destructive DevSecOps fixture and inspect the actual JSON report and exit code.
+- Exercise approved MCP and hook checks separately; do not restore credentials.
+- Complete Section 11 before declaring the machine restored.
+
+### Proposed future one-command interface (not yet implemented)
+
+After inspecting and extending the existing scripts, a future launcher could expose:
+
+```powershell
+# PROPOSED ONLY: Do not use until implemented and tested
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Audit
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Install
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Restore
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Full
+```
+
+Suggested implementation files:
+
+```text
+Restore-Copilot.ps1           # Windows entry point and approval gates
+restore.sh                   # Existing WSL restore coordinator
+restore_files.py             # Existing allowlisted file restore engine
+install/install-devsecops.sh # Proposed idempotent Linux installer
+install/tools.conf           # Proposed approved tool/version manifest
+```
+
+**Implementation acceptance gates:** Audit must be read-only; Install must skip compatible tools and request approval; Restore must preserve rollback snapshots; Full must stop on failures and distinguish PASS, FAIL, SKIPPED, and NOT VERIFIED. Do not update the README to label these modes operational until their CLI parameters, tests, and a safe end-to-end dry run have been verified.
+
+### Manual fallback
+
+If the PowerShell launcher is unavailable or blocked by approved policy, use the verified Git clone from Section 3, the conservative selective restoration in Section 5, and the per-tool installation procedures in Section 7.1. Do not copy all of `/root/.copilot` wholesale or import authentication state.
+
+---
 
 ## 2. Prerequisites and identities
 
