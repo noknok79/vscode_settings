@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO="$(git rev-parse --show-toplevel)"
+CHECKER="$REPO/scripts/copilot-health-check.py"
+
+cd "$REPO"
+
+echo "========================================"
+echo " COPILOT BACKUP PRE-COMMIT VALIDATION"
+echo "========================================"
+
+echo
+echo "=== 1. GIT DIFF VALIDATION ==="
+
+git diff --cached --check
+echo "[PASS] Git diff validation"
+
+echo
+echo "=== 2. PYTHON SYNTAX ==="
+
+python3 -B - "$CHECKER" <<'PY'
+import ast
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+ast.parse(path.read_text(encoding="utf-8"))
+
+print("[PASS] Python syntax")
+PY
+
+echo
+echo "=== 3. COPILOT HEALTH CHECK ==="
+
+python3 -B "$CHECKER" \
+  --home "${COPILOT_HOME:-$HOME/.copilot}" |
+  tail -6
+
+echo
+echo "=== 4. GITLEAKS ==="
+
+gitleaks git \
+  --staged \
+  --no-banner \
+  --redact=100 \
+  --exit-code 1
+
+echo
+echo "========================================"
+echo " PRE-COMMIT VALIDATION PASSED"
+echo "========================================"
