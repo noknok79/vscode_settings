@@ -1,6 +1,6 @@
 ---
 name: fix
-description: Diagnose, fix, validate, and explain DevOps engineering issues.
+description: "Diagnose, fix, validate, and explain DevOps engineering issues."
 disable-model-invocation: true
 ---
 
@@ -37,6 +37,25 @@ smallest reliable fix, and validate the result.
 7. Validate syntax, functionality, and expected behavior.
 8. Review security and deployment risks.
 9. Report the final result.
+
+## Azure Pipelines
+
+Use the [fix-azure-pipeline skill](../fix-azure-pipeline/SKILL.md).
+Inspect the failing logs, relevant YAML, templates, and any supplied working
+pipeline or acceptance criteria. Verify applicable behavior against Microsoft
+Learn; distinguish confirmed causes from assumptions.
+
+Respect the requested file scope. Preserve triggers, stages, dependencies,
+variables, environment-specific configuration, authentication, and approvals
+unless a change is explicitly requested. Do not copy credentials or assume
+access, permissions, or environment configuration are correct.
+
+Run focused, non-destructive checks and a representative failure simulation
+when feasible. Distinguish local checks from an actual pipeline run; do not
+queue or deploy without explicit approval. Report blocked or unverified behavior.
+
+Use targeted reads and existing tools; avoid unnecessary agents, repeated
+checks, and lengthy output. Follow the current request's approval requirements.
 
 ## Validation
 
