@@ -12,6 +12,7 @@ Integrate the attached Python smoke-test script `{{scriptPath}}` into `{{pipelin
 - Make the minimal script edits needed (for example, use the locally built image, pass env vars) and disclose them.
 - Run in both the PR validation job and the push job; publish JUnit results with `succeededOrFailed()`.
 - Do not queue, commit, or push.
+- Never expose secrets or credentials.
 
 # Process (6 phases, trillion sanity verify)
 

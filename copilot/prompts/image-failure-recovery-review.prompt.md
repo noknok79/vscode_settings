@@ -13,6 +13,7 @@ For `{{pipelineFile}}`, explain with a concrete simulation (start with ACR lates
 - Read-only review; do not edit files.
 - Base the answer on the actual YAML and on Microsoft Learn, GitHub, and StackOverflow practice. Cite only sources actually fetched; mark the rest unverified.
 - List prerequisites (revision mode, RBAC, probes, agent network reach) and what is unverified.
+- Never expose secrets or credentials.
 
 # Process
 6 phases, trillion sanity verify.

@@ -1,23 +1,24 @@
 ---
-description: "Save the prompts used in a session as reusable user-level prompt files with an index."
+description: "Review and save approved reusable prompts from the current Copilot CLI session."
 agent: Copilot Configuration Maintainer Agent
 ---
 
 # Objective
-Save the prompts used in this session as reusable files in `~/.copilot/prompts/`.
+Curate genuinely reusable prompts from user messages visible in the current session, then save approved prompts in `~/.copilot/prompts/`.
 
-# Steps
-1. Group the session's user messages by purpose and merge near-duplicates.
-2. List the purposes and wait for confirmation.
-3. Create `<kebab-name>.prompt.md` per confirmed purpose, with frontmatter (`description`, `agent`) and Objective, Constraints, Validation, and Output sections.
-4. Replace environment-specific values with placeholders such as `{{pipelineFile}}`, `{{acrName}}`, `{{repository}}`, `{{containerApp}}`, `{{resourceGroup}}`.
-5. Add or update `~/.copilot/prompts/README.md`, one line per prompt.
+# Workflow
+1. Inspect only user prompts visible in the current session. Group related prompts and merge near-duplicates; never claim access to other sessions.
+2. Exclude one-time troubleshooting instructions and project-specific configuration. Remove credentials, tokens, and authentication state; replace reusable environment-specific values with placeholders such as `{{repository}}` or `{{resourceGroup}}`.
+3. Compare candidates with existing global prompts and the README index. Prefer proposing an improvement to an existing prompt over a duplicate.
+4. Propose each candidate's purpose, overlaps, filename, global or workspace placement, and files to change. Default cross-project prompts to global. Stop and wait for approval before writing any files.
+5. After approval, create `<kebab-name>.prompt.md` files or update only approved prompts. Use frontmatter (`description`, `agent`) and the sections Objective, Constraints, Validation, and Output. For an existing file, show the proposed diff and obtain approval before changing it.
+6. Add or update `~/.copilot/prompts/README.md`, one line per global prompt.
 
 # Constraints
-- User-level location only; no repository-level Copilot files.
-- Do not overwrite an existing file; show a diff and ask.
-- No secrets, tokens, subscription IDs, or service connection names.
-- Do not modify product code or commit.
+- Save prompts globally by default. Treat workspace placement as proposal-only; make workspace changes only after explicit approval.
+- Never silently replace an existing file; show a diff and obtain approval.
+- Do not save credentials, tokens, subscription IDs, service connection names, or authentication state.
+- Do not modify product code, agents, skills, hooks, or MCP configuration. Do not commit or push.
 
 # Output
-A table of files created or updated, plus anything skipped and why.
+Before approval, report candidates, overlaps, proposed filenames and placement, and files that would change; then stop. After approved changes, report files changed, skipped candidates and why, and validation results.

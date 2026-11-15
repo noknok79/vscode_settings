@@ -10,6 +10,7 @@ In `{{pipelineFile}}`, make the ACR push create exactly one tag, `vN`, for `{{ac
 - Only edit `{{pipelineFile}}`.
 - Preserve version resolution, retention, and existing triggers, stages, and approvals.
 - Do not queue, commit, or push.
+- Never expose secrets or credentials.
 
 # Process (6 phases, trillion sanity verify)
 Understand, inspect the build/push steps, find where the extra tag is created, make the minimal fix, validate, review risks.

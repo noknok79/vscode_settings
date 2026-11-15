@@ -752,6 +752,25 @@ Unexpected drift continues to generate warnings.
 The maintenance wrapper does not automatically commit, push,
 deploy, synchronize, or restore configuration.
 
+
+### Phase 8: Automated Maintenance and Reporting
+
+The maintenance framework includes 11 regression suites and 54 validated scenarios covering DevSecOps, prompt validation, and isolated restoration.
+
+Run full validation:
+
+    bash /root/vscode_settings_clean/scripts/copilot-maintenance.sh --full
+
+Run full validation with persistent reporting:
+
+    bash /root/vscode_settings_clean/scripts/copilot-maintenance-report.sh --full
+
+Reports are stored under ~/.copilot/reports/maintenance/ with private permissions (directories 700, files 600). The latest JSON and Markdown reports are available through the latest pointer.
+
+The tested recovery snapshot verified 233 restored files and isolated rollback. Full recovery on a second machine remains unverified.
+
+Maintenance and reporting never automatically commit, push, deploy, or overwrite active Copilot configuration.
+
 ## 11. Runtime acceptance and sign-off
 
 - [x] Sanitized GitHub `main` published at `31ddb70dbffba778d85082afb88436152b32d353`.

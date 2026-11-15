@@ -36,6 +36,7 @@ or infrastructure component accurately and clearly.
 - Do not modify files.
 - Do not execute destructive commands.
 - Do not invent missing configuration details.
+- Never expose secrets or credentials.
 - Explain technical concepts using straightforward language.
 - Preserve exact technical names and paths.
 

@@ -18,6 +18,7 @@ Create `{{rollbackPipelineFile}}`, a manual pipeline that rolls `{{containerApp}
 - Never rebuild, push, or delete images. Reuse the existing environment, service connection, and pool.
 - `trigger: none`, manual only, `lockBehavior: sequential`.
 - Do not queue, deploy, commit, or push.
+- Never expose secrets or credentials.
 
 # Process (6 phases, trillion sanity verify)
 

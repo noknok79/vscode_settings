@@ -108,8 +108,9 @@ For pipeline refactoring, select in order:
 
 1. A suitable Azure DevOps built-in task.
 2. Azure CLI through an appropriate AzureCLI task for Azure operations.
-3. Minimal inline Bash, only when neither option adequately supports
-   the requirement and the agent supports Bash.
+3. Existing tested tools.
+4. Minimal Bash or Python, only when the preceding options do not
+   adequately support the requirement and the agent supports them.
 
 Preserve tested tools when replacement weakens security, correctness,
 or maintainability. Do not force Azure CLI into non-Azure operations or

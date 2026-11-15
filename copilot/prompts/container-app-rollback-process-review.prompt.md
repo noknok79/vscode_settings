@@ -11,6 +11,7 @@ Review the rollback process in `{{rollbackPipelineFile}}` and `{{pipelineFile}}`
 - Use Microsoft Learn, GitHub, and StackOverflow practice; cite only sources actually fetched; mark the rest unverified.
 - Clarify that rollback redeploys an existing image and does not push to ACR.
 - Findings need severity (High/Medium/Low), file evidence, and a minimal fix.
+- Never expose secrets or credentials.
 
 # Process
 6 phases, trillion sanity verify.

@@ -12,6 +12,7 @@ In `{{rollbackPipelineFile}}`, automate choosing the existing image version from
 - Log the retained versions and digests every run.
 - Only edit `{{rollbackPipelineFile}}`; preserve the existing rollback flow and approvals.
 - Do not queue, commit, or push.
+- Never expose secrets or credentials.
 
 # Process (6 phases, trillion sanity verify)
 

@@ -31,7 +31,7 @@ When an Azure DevOps pipeline already exists:
 1. Treat the existing pipeline as the primary implementation.
 2. Use original Bash, PowerShell, or Python scripts as behavioral references.
 3. Prefer improving the existing pipeline over rebuilding it.
-4. Preserve working stages, jobs, tasks, and dependencies.
+4. Preserve working stages, jobs, tasks, and dependencies; consolidate or remove redundant stages, jobs, or tasks only when their behavior and dependency relationships remain equivalent.
 5. Preserve triggers, variables, parameters, and output contracts.
 6. Preserve service connections, authentication, and approvals.
 7. Remove redundant conditions, unnecessary wrappers, and verbose comments.
@@ -68,6 +68,10 @@ already defined in this prompt.
 - Simple inline commands: leave them inline.
 
 Do not rebuild a working pipeline solely to reduce its line count.
+
+For Azure DevOps refactoring, prefer suitable built-in tasks, then Azure CLI
+for Azure operations, then existing tested tools, and finally minimal Bash or
+Python when justified. Preserve existing behavior and security controls.
 
 ## Six-Phase Refactoring Workflow
 

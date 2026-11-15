@@ -10,6 +10,7 @@ Verify that the attached Run pipeline screenshot or form matches the parameters 
 - Read-only; do not edit files.
 - Compare each displayed field, label, default, and Required marker with the YAML `parameters:` block.
 - Note branch selection, approvals, and environment checks that affect the run; mark unverified items.
+- Never expose secrets or credentials.
 
 # Output
 Verdict (correct or not), a match table, things to check on the form, and fixes if any.
