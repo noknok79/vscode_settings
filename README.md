@@ -637,6 +637,53 @@ A matching Git commit does not prove `/root/.copilot` is identical to the backup
 - Full Windows/WSL runtime recovery remains unverified.
 - Existing-file rollback and second-machine recovery remain unverified.
 
+### Routine Copilot Configuration Maintenance
+
+Run the existing maintenance wrapper from WSL Ubuntu:
+
+~~~bash
+bash /root/vscode_settings_clean/scripts/copilot-maintenance.sh
+~~~
+
+The wrapper performs:
+
+1. Copilot configuration health validation.
+2. Active-versus-backup configuration drift detection.
+3. Git working-tree verification.
+4. Gitleaks security scanning.
+
+#### Recommended maintenance schedule
+
+| Frequency | Activity |
+|---|---|
+| After configuration changes | Run maintenance and investigate drift |
+| Weekly | Execute the maintenance wrapper |
+| Monthly | Review CLI, agents, skills, hooks, and tool compatibility |
+| Quarterly | Verify a fresh GitHub clone and isolated recovery |
+| Before laptop reformat | Perform full recovery-readiness verification |
+
+#### Interpreting results
+
+- PASS: Validation succeeded.
+- INFO: Reviewed backup-only prompts retained intentionally.
+- WARN: Investigate unexpected configuration differences.
+- FAIL: Resolve validation failures before updating the backup.
+
+The 11 reviewed backup-only prompts are informational.
+Unexpected drift continues to generate warnings.
+
+#### Security precautions
+
+- Review Git changes before committing.
+- Preserve the existing pre-commit hook and Gitleaks checks.
+- Never back up credentials, tokens, SSH private keys, or session state.
+- Preserve separate personal and corporate GitHub identities.
+- Do not disable security controls to eliminate warnings.
+- Validate recovery after significant configuration changes.
+
+The maintenance wrapper does not automatically commit, push,
+deploy, synchronize, or restore configuration.
+
 ## 11. Runtime acceptance and sign-off
 
 - [x] Sanitized GitHub `main` published at `31ddb70dbffba778d85082afb88436152b32d353`.
