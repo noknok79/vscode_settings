@@ -1,5 +1,5 @@
 ---
-description: Diagnose, fix, validate, and explain DevOps engineering issues.
+description: "Diagnose, fix, validate, and explain DevOps engineering issues."
 agent: devops-engineer
 ---
 
@@ -95,7 +95,7 @@ When multiple technical approaches are possible:
 For existing Azure DevOps pipelines:
 
 - Treat the existing pipeline as the primary implementation.
-- Preserve triggers, stages, jobs, tasks, and dependencies.
+- Preserve triggers, stages, jobs, task behavior, and dependencies.
 - Preserve variables, parameters, outputs, and failure behavior.
 - Preserve service connections, authentication, and approvals.
 - Inspect logs and identify the actual root cause.
@@ -103,6 +103,28 @@ For existing Azure DevOps pipelines:
 - Use the existing fix-azure-pipeline skill when applicable.
 - Verify version-dependent behavior against Microsoft Learn.
 - Do not queue or deploy pipelines without explicit authorization.
+
+For pipeline refactoring, select in order:
+
+1. A suitable Azure DevOps built-in task.
+2. Azure CLI through an appropriate AzureCLI task for Azure operations.
+3. Minimal inline Bash, only when neither option adequately supports
+   the requirement and the agent supports Bash.
+
+Preserve tested tools when replacement weakens security, correctness,
+or maintainability. Do not force Azure CLI into non-Azure operations or
+remove required tests or quality gates.
+
+- Audit script algorithms, control flow, dependencies, security controls,
+  native candidates, redundant conditionals, and duplicated logic. Verify
+  task availability, versions, inputs, limitations, agent dependencies,
+  and service connection compatibility against Microsoft Learn.
+- Propose a task-selection decision matrix and the simplest secure design;
+  prefer reusable YAML templates where appropriate.
+- Implement the approved design without unnecessary scripts or abstractions.
+- Validate applicable syntax, security, and functionality; compare behavior
+  and security equivalence, including approvals and rollback.
+- Report simplifications, selected tasks, remaining custom logic, and results.
 
 ## Reusability
 
