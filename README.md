@@ -3,7 +3,9 @@
 **Updated:** 13 November 2026 (automated restoration quick-start edition)  
 **Repository:** `noknok79/vscode_settings` (`main`)  
 **Verified recovery commit:** `68c5b1bf2e8c6072116de552eab4e51a10c0daef`
-**Target:** Windows VS Code Stable + WSL Ubuntu (`root`, `/root/.copilot`)  
+
+**Target:** Windows VS Code Stable + WSL Ubuntu (selected WSL user's home)
+
 **Purpose:** Recover approved Copilot customizations and the DevSecOps toolchain without restoring credentials or transient runtime data.
 
 > **Safety and scope:** The sanitized repository was published and independently cloned from GitHub on 13 November 2026. Git integrity, 230 tracked files, and Gitleaks checks passed. This does **not** certify full restoration on a second PC or complete absence of confidential material. Never back up tokens, private keys, `~/.copilot/config.json`, session history, caches, or authentication state. Only use approved software sources and review employer-confidential content before publishing to a personal repository.
@@ -21,9 +23,7 @@
 
 ## Quick Start: Efficient Installation and Restoration
 
-**Recommended design:** One **Windows PowerShell entry point** coordinates the existing Bash/Python restoration scripts. Bash installs Linux DevSecOps tools in WSL. No Makefile or Ansible is required.
-
-> **Current vs planned:** The existing launcher command is `Restore-Copilot.ps1 -Distro Ubuntu`, with interactive `PREPARE`, `RESTORE`, and optional `INSTALL` approvals. The proposed `-Mode Audit`, `-Mode Install`, `-Mode Restore`, and `-Mode Full` interfaces, plus `install/install-devsecops.sh` and `install/tools.conf`, are **not implemented or verified in the published 230-file baseline**. Do not run them as if they already work.
+One **Windows PowerShell entry point** coordinates the existing Bash/Python restoration scripts. The new mode flow has isolated tests but has not been validated on a second Windows/WSL machine. The launcher does not install the complete DevSecOps toolchain; use Section 7.1 for separately approved tools.
 
 ### Quick Start A. Prepare Windows and WSL
 
@@ -36,22 +36,22 @@ Get-Command code.cmd -ErrorAction SilentlyContinue
 $PSVersionTable.PSVersion
 ```
 
-3. Select the actual distro name, for example `Ubuntu` or `Ubuntu-24.04`, and verify the Linux account:
+3. Select the actual distro name, for example `Ubuntu` or `Ubuntu-24.04`, and verify the default Linux account:
 
 ```powershell
-wsl.exe --distribution Ubuntu --user root --exec whoami
-wsl.exe --distribution Ubuntu --user root --exec printenv HOME
+wsl.exe --distribution Ubuntu --exec whoami
+wsl.exe --distribution Ubuntu --exec printenv HOME
 ```
 
-4. Set up the approved `github-noknok79` SSH identity in WSL without overwriting another GitHub identity. Verify the published GitHub host-key fingerprint and repository access. Do not copy private keys or OAuth tokens from Git.
+4. Set up the approved `github-noknok79` SSH identity in the selected WSL account without overwriting another GitHub identity. Verify the published GitHub host-key fingerprint and repository access. Do not copy private keys or OAuth tokens from Git.
 
 ### Quick Start B. Obtain the restoration scripts
 
-The **existing** launcher requires `Restore-Copilot.ps1`, `restore.sh`, and `restore_files.py` together in a **Windows-accessible working directory**. You may obtain them from the reviewed sanitized repository, but inspect their content before executing anything. The repository's `copilot/`, `vscode/`, and `wsl/` directories are the backup payload, not a substitute for the launcher.
+The launcher requires `Restore-Copilot.ps1`, `restore.sh`, and `restore_files.py` together in a **Windows-accessible working directory**. Include `scripts/copilot-health-check.py` for the optional health check. You may obtain them from the reviewed sanitized repository, but inspect their content before executing anything. The repository's `copilot/`, `vscode/`, and `wsl/` directories are the backup payload, not a substitute for the launcher.
 
 If cloning from WSL, use the verification procedure in Section 3. For a Windows PowerShell launcher, select a reviewed directory that Windows can access, such as a folder on the Windows filesystem or an accessible WSL share. **Do not assume a Linux `/root/...` path is a native Windows PowerShell path.**
 
-### Quick Start C. Run the existing PowerShell launcher
+### Quick Start C. Run the PowerShell launcher
 
 From **standalone Windows PowerShell**, in the directory containing the three scripts:
 
@@ -62,15 +62,15 @@ foreach ($Name in $Required) {
         throw "Missing restoration file: $Name"
     }
 }
-.\Restore-Copilot.ps1 -Distro Ubuntu
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Full
 ```
 
 Replace `Ubuntu` with the exact distro name. Follow the actual prompts:
 
-1. Type **`PREPARE`** only after reviewing prerequisites, source identity, and clone plan.
-2. Inspect the generated file plan, source commit, target paths, hooks, MCP commands, and existing files from a separate terminal.
-3. Type **`RESTORE`** only after approving the proposed replacements. Preserve the printed rollback directory.
-4. Approve optional **`INSTALL`** or selected extensions only if required and authorized. Extension scope matters: Windows Local and WSL are different.
+1. If required packages are missing, type **`INSTALL`** only after approving the displayed package list. Non-root accounts need authorized `sudo` access.
+2. Type **`PREPARE`** only after reviewing prerequisites, source identity, and clone plan.
+3. Inspect the generated file plan, source commit, target paths, hooks, MCP commands, and existing files from a separate terminal. Type **`RESTORE`** only after approving replacements. Preserve the printed run directory.
+4. If Copilot CLI is missing, type **`INSTALL`** only if authorized; Enter defers it. Enter only approved extension IDs, or Enter to defer. Extension scope matters: Windows Local and WSL are different.
 5. Read the verification report. Do not claim runtime success from matching file hashes alone.
 
 **Failure rule:** Stop on an error, retain the run directory, review `rollback.json`, and use the documented rollback path. Never bypass enterprise PowerShell execution policy or automatically delete a working configuration.
@@ -94,29 +94,29 @@ After restoration:
 - Exercise approved MCP and hook checks separately; do not restore credentials.
 - Complete Section 11 before declaring the machine restored.
 
-### Proposed future one-command interface (not yet implemented)
-
-After inspecting and extending the existing scripts, a future launcher could expose:
+### Operating modes
 
 ```powershell
-# PROPOSED ONLY: Do not use until implemented and tested
 .\Restore-Copilot.ps1 -Distro Ubuntu -Mode Audit
 .\Restore-Copilot.ps1 -Distro Ubuntu -Mode Install
 .\Restore-Copilot.ps1 -Distro Ubuntu -Mode Restore
 .\Restore-Copilot.ps1 -Distro Ubuntu -Mode Full
 ```
 
-Suggested implementation files:
+| Mode | Behavior |
+|---|---|
+| Audit | Read-only checks of the selected account's environment and available health checker; does not clone, install or restore. Starting WSL may start the distribution. |
+| Restore | Approve any missing core Ubuntu packages, then prepare, review and restore files with rollback and hash verification. No CLI or extension installation. |
+| Install | Approve missing core packages and, separately, missing Copilot CLI. Does not clone or restore configuration. |
+| Full | Audit, restore, then check/install Copilot CLI and optionally install selected Windows Local extensions. |
 
-```text
-Restore-Copilot.ps1           # Windows entry point and approval gates
-restore.sh                   # Existing WSL restore coordinator
-restore_files.py             # Existing allowlisted file restore engine
-install/install-devsecops.sh # Proposed idempotent Linux installer
-install/tools.conf           # Proposed approved tool/version manifest
-```
+Omitting `-Mode` preserves the legacy Full workflow and root target: `.\Restore-Copilot.ps1 -Distro Ubuntu`. Explicit modes discover the default WSL user; if only root has an existing Copilot configuration, root is selected. If both have one, select the intended account. The selected account's `HOME` must match its account database entry, be owned by the user, and be a canonical path without symlinks. `COPILOT_HOME` overrides and non-Ubuntu or pre-22.04 distributions are not supported.
 
-**Implementation acceptance gates:** Audit must be read-only; Install must skip compatible tools and request approval; Restore must preserve rollback snapshots; Full must stop on failures and distinguish PASS, FAIL, SKIPPED, and NOT VERIFIED. Do not update the README to label these modes operational until their CLI parameters, tests, and a safe end-to-end dry run have been verified.
+The launcher prints PASS, FAIL, SKIPPED and NOT VERIFIED results and stops on failures. The health checker requires Python and PyYAML; it is NOT VERIFIED if unavailable. A failed pre-restore health check stops the launcher; investigate before proceeding. The audit does not authenticate or prove repository access, subscription, software compatibility, or runtime behavior. The optional CLI installer records its download's SHA-256 but that hash is not publisher authentication. Existing core packages and Copilot CLI are not upgraded; VS Code may update explicitly selected extensions.
+
+Environment PASS means the audited tools, PyYAML, VS Code command and default-profile directory were available at audit time, not that authentication or runtime functionality was verified. Unavailable audit items produce NOT VERIFIED without stopping other modes; the standalone `restore.sh audit` returns 3 in that case. The Windows profile must be a canonical path on a mounted local Windows drive; custom WSL automount roots are supported, but network shares and unrecognized mount types are rejected.
+
+The isolated regression suite defaults to PowerShell 7 (`pwsh`) for launcher tests. From WSL, set `TEST_PWSH_RUNTIME=windows-powershell-5.1` to select `powershell.exe` explicitly; `TEST_PWSH` optionally specifies its executable path. The suite checks the runtime identity and reports launcher tests as NOT VERIFIED if the runtime is unavailable or Windows PowerShell execution policy is Restricted. It never changes or bypasses execution policy.
 
 ### Manual fallback
 
@@ -127,8 +127,8 @@ If the PowerShell launcher is unavailable or blocked by approved policy, use the
 ## 2. Prerequisites and identities
 
 - Windows VS Code Stable, WSL Ubuntu 22.04+, Windows PowerShell, Git, SSH, and Python 3.
-- Documented WSL user: `root`, `HOME=/root`. Adapt paths if using another user or `COPILOT_HOME`.
-- Preserve the `github-noknok79` SSH alias separately from `dbg-mark-villanueva`. Verify GitHub's official SSH host-key fingerprint before trusting it.
+- The legacy launcher targets `root`; explicit modes select a WSL account as described above. Set up the backup SSH alias for that account.
+- Keep personal backup `noknok79`, Copilot CLI `dbg-mark-villanueva`, and corporate GitHub `mark-a-b-villanueva_accent` separate. Verify GitHub's official SSH host-key fingerprint before trusting it.
 - Git SSH, Copilot subscription, and MCP authentication are different identities.
 - Before full restoration, review the scripts, close VS Code/Copilot CLI, and pause Settings Sync.
 
@@ -175,6 +175,7 @@ Keep these three restore implementation files together at the chosen working-dir
 Restore-Copilot.ps1
 restore.sh
 restore_files.py
+scripts/copilot-health-check.py  # optional, requires PyYAML
 ```
 
 The launcher clones the separate payload (`copilot/`, `vscode/`, `wsl/`). Review script-relative paths and the restoration allowlist. From standalone Windows PowerShell in the directory containing the three files:
@@ -186,26 +187,26 @@ foreach ($Name in $Required) {
         throw "Missing: $Name"
     }
 }
-.\Restore-Copilot.ps1 -Distro Ubuntu
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Full
 ```
 
 Use the exact installed WSL distribution name. Follow the launcher's approval gates:
 
-1. **PREPARE:** approve reviewed prerequisite work and cloning, not file replacement.
+1. **INSTALL:** separately approve any missing packages, then **PREPARE** to approve cloning, not file replacement.
 2. Review the plan, commit, destinations, hooks, MCP definitions, and machine-specific settings.
-3. **RESTORE:** authorize only reviewed replacements; preserve the `/root/copilot-restore-...` run directory and rollback inventory.
-4. **INSTALL (optional):** authorize Copilot CLI or Windows-local extensions separately. WSL extensions need their own scope review.
+3. **RESTORE:** authorize only reviewed replacements; preserve the printed run directory and rollback inventory.
+4. **INSTALL (optional):** authorize a missing Copilot CLI or select Windows-local extensions separately. WSL extensions need their own scope review.
 5. Inspect `verification.json`, `rollback.json`, and other reports. File hashes alone do not establish runtime success.
 
 Do not bypass PowerShell execution policy, overwrite authentication, run `rm -rf ~/.copilot`, or use `rsync --delete`.
 
-Explicit rollback from WSL, with actual paths:
+Explicit rollback from a WSL shell running as the same selected account, substituting the actual script and run paths:
 
 ```bash
-bash /path/to/restore.sh rollback '/root/copilot-restore-<actual-run-id>'
+bash /path/to/restore.sh rollback "$HOME/copilot-restore-<actual-run-id>"
 ```
 
-Rollback does not automatically reverse installed applications or extensions. The full launcher has not been verified end-to-end on a second machine.
+Type `ROLLBACK` only after reviewing the inventory. Rollback checks hashes and refuses conflicting changes; it does not automatically reverse installed applications or extensions. If apply failed partway through, keep the run directory and inspect `rollback.json` before deciding whether to roll back. The full launcher has not been verified end-to-end on a second machine.
 
 ## 5. Manual selective restoration
 
@@ -635,7 +636,7 @@ A matching Git commit does not prove `/root/.copilot` is identical to the backup
 - Isolated rollback completed successfully.
 - The active Copilot configuration was not used as a restore target.
 - Full Windows/WSL runtime recovery remains unverified.
-- Existing-file rollback and second-machine recovery remain unverified.
+- This historical check did not verify existing-file rollback or second-machine recovery. Current isolated tests cover existing-file rollback; second-machine recovery remains unverified.
 
 ### Routine Copilot Configuration Maintenance
 

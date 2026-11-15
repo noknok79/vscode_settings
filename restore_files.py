@@ -21,6 +21,15 @@ SECRETS = re.compile(
     rb"(?:gh[opsur]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}"
     rb"|-----BEGIN [A-Z ]*PRIVATE KEY-----|Bearer [A-Za-z0-9_.-]{20,})"
 )
+FORBIDDEN_DIRS = {
+    ".git", ".ssh", "session-state", "sessions", "cache", "caches",
+    ".cache", "__pycache__", "mcp-oauth-config", "mcp-secrets",
+}
+FORBIDDEN_FILES = {
+    "config.json", "auth.json", "credentials", "credential", "token", "tokens",
+    "secret", "secrets", "id_rsa", "id_ed25519", "id_ecdsa", "id_dsa",
+    "id_ecdsa_sk", "id_ed25519_sk", ".env", ".netrc",
+}
 
 
 def fail(message):
@@ -123,9 +132,12 @@ def prepare(run, windows, home, cli_settings=False):
             if any(not re.fullmatch(r"[a-z0-9][a-z0-9-]*\.[a-z0-9][a-z0-9._-]*", item) for item in extensions):
                 fail("Extension inventory must contain publisher.extension IDs only, without versions or CLI arguments")
             continue
-        if any(part in (".git", ".ssh", "session-state", "mcp-oauth-config", "mcp-secrets") for part in relative.parts):
+        if any(part.lower() in FORBIDDEN_DIRS for part in relative.parts):
             fail(f"Forbidden runtime/credential directory: {name}")
-        if relative.name in ("config.json", "auth.json", "credentials", "id_rsa", "id_ed25519"):
+        filename = relative.name.lower()
+        if (filename in FORBIDDEN_FILES
+                or filename.endswith((".pem", ".key", ".p12", ".pfx", ".ppk", ".jks", ".keystore", ".pyc", ".pyo"))
+                or filename.startswith((".env.", "credentials.", "credential.", "token.", "tokens.", "secret.", "secrets.", "auth."))):
             fail(f"Forbidden credential/state filename: {name}")
         safe_path(target)
         if target.exists() and not target.is_file():
