@@ -39,7 +39,7 @@ devsecops_scanner_init() {
     chmod 700 "$DEVSECOPS_SCANNER_DIR"
 }
 
-record_mode_result() {
+devsecops_record_result() {
     local tool="$1"
     local check="$2"
     local status="$3"
@@ -55,6 +55,10 @@ record_mode_result() {
     else
         devsecops_record "$tool" "$check" "$status" "$exit_code"
     fi
+}
+
+record_mode_result() {
+    devsecops_record_result "$@"
 }
 
 validate_secrets_mode() (
@@ -429,20 +433,7 @@ SKIP=0
 ERRORS=0
 
 record_validation_result() {
-    local tool="$1"
-    local check="$2"
-    local status="$3"
-    local exit_code="$4"
-
-    if [[ -z "${DEVSECOPS_JSON_REPORT:-}" ]]; then
-        return 0
-    fi
-
-    devsecops_record \
-        "$tool" \
-        "$check" \
-        "$status" \
-        "$exit_code"
+    devsecops_record_result "$@"
 }
 
 run_check() {
@@ -491,21 +482,7 @@ check_tool() {
 }
 
 record_security_result() {
-    local tool="$1"
-    local check="$2"
-    local status="$3"
-    local exit_code="$4"
-    local findings="${5:-}"
-
-    if [[ -z "${DEVSECOPS_JSON_REPORT:-}" ]]; then
-        return 0
-    fi
-
-    if [[ -n "$findings" ]]; then
-        devsecops_record "$tool" "$check" "$status" "$exit_code" "$findings"
-    else
-        devsecops_record "$tool" "$check" "$status" "$exit_code"
-    fi
+    devsecops_record_result "$@"
 }
 
 validate_terraform() {

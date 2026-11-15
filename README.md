@@ -275,6 +275,73 @@ The original-machine validator baseline SHA-256 was `261bbbe26e32097be09162989ca
 
 The skill supports applicable Bash, Terraform, IaC, Kubernetes, Helm and secret scanning. A skipped or unavailable scanner is **not** a pass. The external toolchain must be installed separately using Section 7.1.
 
+
+### Phase 7: DevSecOps Validation Optimization (15 November 2026)
+
+**Status:** Completed, validated, and installed globally.
+
+The optimization consolidated three result-recording implementations
+into a shared function, `devsecops_record_result()`.
+
+Existing interfaces remain unchanged:
+
+- `record_mode_result()`
+- `record_validation_result()`
+- `record_security_result()`
+
+The refactoring reduced `validate.sh` by 23 lines
+(7 insertions and 30 deletions).
+
+#### Validation Results
+
+| Test Category | Passed |
+|---|---:|
+| Initial regression tests | 14 |
+| Behavioral comparisons | 3 |
+| Recording-function comparisons | 16 |
+| Gitleaks integration | 2 |
+| Helm integration | 3 |
+| Checkov integration | 2 |
+| Trivy integration | 2 |
+| Production smoke tests | 2 |
+| **Total** | **44/44** |
+
+All completed tests passed. Tested JSON outputs and exit codes
+remained consistent between the original and optimized implementations.
+
+Concurrent publishing, interruption recovery, and exhaustive scanner
+failure scenarios remain outside the verified scope.
+
+#### Installed Validator
+
+Global location:
+
+`/root/.copilot/skills/devsecops-validation/scripts/validate.sh`
+
+Backup repository location:
+
+`copilot/skills/devsecops-validation/scripts/validate.sh`
+
+Production rollback backup:
+
+`/root/.copilot/skills/devsecops-validation/scripts/validate.sh.pre-phase7-promotion`
+
+Optimized SHA-256:
+
+`b0ad4932f9bb8ef7c2a137d4b48bfb84eda6fff77eac710bd12b265a207a77cc`
+
+Historical SHA-256:
+
+`261bbbe26e32097be09162989ca957b0e6aeca991bd28f48426d98c70ac191bf`
+
+#### Verification and Recovery
+
+Verify the active validator and repository backup using `sha256sum`.
+Run `bash -n`, ShellCheck, and functional regression tests after changes.
+
+Preserve the original rollback backup until recovery verification
+is complete. Never automatically deploy, commit, or push changes.
+
 ## 7.1 DevSecOps Toolchain Installation and Restoration
 
 ### 7.1.1 Principles and installation order
