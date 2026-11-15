@@ -168,6 +168,21 @@ def main():
                 report("FAIL", f"Frontmatter: {path.name}: {exc}")
 
 
+    # Reviewed prompts intentionally retained in the backup only.
+    backup_only_prompts = {
+        "api-contract-doc.prompt.md",
+        "azure-infra-change.prompt.md",
+        "bff-feature-builder.prompt.md",
+        "bff-test-generator.prompt.md",
+        "confluence-publish.prompt.md",
+        "copilot-configuration-review.prompt.md",
+        "github-actions-debug.prompt.md",
+        "security-audit.prompt.md",
+        "solution-review.prompt.md",
+        "subagent-dispatch.prompt.md",
+        "uat-readiness-check.prompt.md",
+    }
+
     if args.drift:
         import hashlib
 
@@ -232,7 +247,10 @@ def main():
                 b = backup_files.get(name)
 
                 if a is None:
-                    report("WARN", f"Backup only: {category}/{name}")
+                    if category == "prompts" and name in backup_only_prompts:
+                        print(f"[INFO] Intentional backup only: {category}/{name}")
+                    else:
+                        report("WARN", f"Backup only: {category}/{name}")
                 elif b is None:
                     report("WARN", f"Active only: {category}/{name}")
                 elif digest(a) != digest(b):
