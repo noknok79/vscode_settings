@@ -2,7 +2,7 @@
 
 **Updated:** 13 November 2026 (automated restoration quick-start edition)  
 **Repository:** `noknok79/vscode_settings` (`main`)  
-**Verified recovery commit:** `31ddb70dbffba778d85082afb88436152b32d353`  
+**Verified recovery commit:** `68c5b1bf2e8c6072116de552eab4e51a10c0daef`
 **Target:** Windows VS Code Stable + WSL Ubuntu (`root`, `/root/.copilot`)  
 **Purpose:** Recover approved Copilot customizations and the DevSecOps toolchain without restoring credentials or transient runtime data.
 
@@ -146,13 +146,13 @@ A successful GitHub SSH greeting may return status 1. Verify the greeting identi
 
 ## 3. Download and verify the current GitHub snapshot
 
-**Current recovery checkpoint:** `31ddb70dbffba778d85082afb88436152b32d353`. The old history was replaced. Historical commits `6cc087d`, `8c073e6`, and `271f691` are **not** current restoration targets.
+**Current recovery checkpoint:** `68c5b1bf2e8c6072116de552eab4e51a10c0daef`. The old history was replaced. Historical commits `6cc087d`, `8c073e6`, and `271f691` are **not** current restoration targets.
 
 ```bash
 bash --noprofile --norc <<'SCRIPT'
 set -euo pipefail
 REMOTE='git@github-noknok79:noknok79/vscode_settings.git'
-EXPECTED='31ddb70dbffba778d85082afb88436152b32d353'
+EXPECTED='68c5b1bf2e8c6072116de552eab4e51a10c0daef'
 CLONE="/root/vscode_settings_review_$(date +%Y%m%d-%H%M%S)"
 git clone --branch main --single-branch "$REMOTE" "$CLONE"
 test "$(git -C "$CLONE" rev-parse HEAD)" = "$EXPECTED"
@@ -623,6 +623,19 @@ git diff --check
 ```
 
 A matching Git commit does not prove `/root/.copilot` is identical to the backup. Compare hashes for the actual changed files. Validate after every change, check drift weekly, audit compatibility monthly, and verify recovery before PC reformat.
+
+### Isolated recovery verification (15 November 2026)
+
+- Recovery commit: `68c5b1bf2e8c6072116de552eab4e51a10c0daef`.
+- Fresh GitHub clone matched the local recovery commit.
+- Git object integrity and tracked-file inventory passed.
+- All tracked file contents matched the source checkout.
+- Isolated restore prepared 233 files and 5 extension IDs.
+- All 233 restored files passed SHA-256 verification.
+- Isolated rollback completed successfully.
+- The active Copilot configuration was not used as a restore target.
+- Full Windows/WSL runtime recovery remains unverified.
+- Existing-file rollback and second-machine recovery remain unverified.
 
 ## 11. Runtime acceptance and sign-off
 
