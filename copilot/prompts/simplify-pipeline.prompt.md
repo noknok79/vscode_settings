@@ -75,6 +75,8 @@ Apply this workflow to existing Bash, PowerShell,
 Python, and Azure DevOps YAML.
 
 ### Phase 1 - Audit
+- Identify the repository and current branch.
+- Identify existing tests and external dependencies.
 
 - Inspect relevant files and dependencies.
 - Record Git status, SHA-256 hashes, and line counts.
@@ -93,6 +95,9 @@ STOP after Phase 2.
 Do not modify files until explicitly approved.
 
 ### Phase 3 - Implement
+- Preserve triggers, conditions, environment variables,
+  output contracts, authentication, and approval gates.
+- Extract complex inline scripts only when beneficial.
 
 After approval:
 - Preserve a verified baseline.
@@ -109,6 +114,8 @@ After approval:
   variables, expressions, and approvals.
 
 ### Phase 5 - Compare
+- Preserve failure handling and generated commands.
+- Never execute destructive infrastructure operations.
 
 - Compare original and refactored behavior.
 - Verify exit codes, inputs, outputs, and external commands.
@@ -116,6 +123,8 @@ After approval:
 - Stop if unexpected behavior changes.
 
 ### Phase 6 - Report
+- List exact files changed and explain simplifications.
+- Identify unverified behavior and necessary follow-up checks.
 
 Provide:
 - Original and refactored line counts.
@@ -126,70 +135,6 @@ Provide:
 
 Never automatically commit, push, deploy, or execute
 destructive infrastructure operations.
-
-## Workflow
-
-### Phase 1: Inspect
-
-- Read the selected file and related scripts.
-- Identify its repository and current branch.
-- Inspect Git status.
-- Preserve unrelated modifications.
-- Identify existing security and deployment controls.
-
-### Phase 2: Establish Baseline
-
-- Record original file hashes.
-- Identify inputs, outputs, and exit codes.
-- Identify externally consumed variables.
-- Identify relevant security requirements.
-- Identify existing tests.
-
-### Phase 3: Refactor
-
-- Prefer minimal, understandable changes.
-- Extract lengthy inline Bash or PowerShell when useful.
-- Avoid unnecessary functions and abstractions.
-- Simplify nested conditions only when safe.
-- Preserve authentication and approval gates.
-- Preserve pipeline triggers and conditions.
-- Preserve environment variables and output contracts.
-
-### Phase 4: Validate
-
-For Bash:
-- bash -n
-- ShellCheck
-- shfmt when available
-
-For PowerShell:
-- PowerShell syntax validation
-- PSScriptAnalyzer when available
-
-For Azure DevOps:
-- YAML syntax validation
-- Verify task configuration
-- Verify variables and expressions
-- Verify script paths
-- Verify approval and security controls
-
-### Phase 5: Regression
-
-- Compare original and refactored behavior.
-- Verify exit codes.
-- Verify generated commands.
-- Use mocked external services when appropriate.
-- Never execute destructive infrastructure operations.
-- Preserve failure handling.
-- Stop if behavior differs unexpectedly.
-
-### Phase 6: Review
-
-- Show Git diff --stat.
-- Show exact files changed.
-- Explain what was simplified.
-- Identify any unverified behavior.
-- Recommend additional checks when needed.
 
 ## Safety
 

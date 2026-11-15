@@ -69,69 +69,66 @@ already defined in this prompt.
 
 Do not rebuild a working pipeline solely to reduce its line count.
 
-## Workflow
+## Six-Phase Refactoring Workflow
 
-### Phase 1: Inspect
+Automatically follow this workflow for Bash, PowerShell,
+Python, and Azure DevOps pipeline refactoring.
 
-- Read the selected file and related scripts.
-- Identify its repository and current branch.
-- Inspect Git status.
+### Phase 1 - Audit
+
+- Inspect the existing implementation and related dependencies.
+- Identify repository, branch, and Git status.
+- Record original hashes, inputs, outputs, and exit codes.
+- Identify existing tests and security controls.
 - Preserve unrelated modifications.
-- Identify existing security and deployment controls.
 
-### Phase 2: Establish Baseline
+### Phase 2 - Propose
 
-- Record original file hashes.
-- Identify inputs, outputs, and exit codes.
-- Identify externally consumed variables.
-- Identify relevant security requirements.
-- Identify existing tests.
+- Recommend minimal, behavior-preserving improvements.
+- Explain affected files, risks, and expected benefits.
+- Prefer improving existing pipelines over rebuilding.
+- Recommend the best evidence-supported approach.
+- Avoid unnecessary technical clarification questions.
 
-### Phase 3: Refactor
+STOP after Phase 2.
+Do not modify files until explicitly approved.
 
-- Prefer minimal, understandable changes.
-- Extract lengthy inline Bash or PowerShell when useful.
-- Avoid unnecessary functions and abstractions.
-- Simplify nested conditions only when safe.
-- Preserve authentication and approval gates.
-- Preserve pipeline triggers and conditions.
-- Preserve environment variables and output contracts.
+### Phase 3 - Implement
 
-### Phase 4: Validate
+After approval:
 
-For Bash:
-- bash -n
-- ShellCheck
-- shfmt when available
+- Modify only approved files.
+- Preserve stages, jobs, tasks, triggers, and dependencies.
+- Preserve variables, parameters, authentication,
+  approvals, output contracts, and failure behavior.
+- Avoid unnecessary abstractions and dependencies.
 
-For PowerShell:
-- PowerShell syntax validation
-- PSScriptAnalyzer when available
+### Phase 4 - Validate
 
-For Azure DevOps:
-- YAML syntax validation
-- Verify task configuration
-- Verify variables and expressions
-- Verify script paths
-- Verify approval and security controls
+- Bash: bash -n, ShellCheck, shfmt when available.
+- PowerShell: parser, PSScriptAnalyzer, Pester when available.
+- Python: syntax, tests, configured linters.
+- Azure DevOps: YAML, tasks, paths, variables,
+  expressions, authentication, and approvals.
+- Run applicable security validation.
 
-### Phase 5: Regression
+### Phase 5 - Compare
 
 - Compare original and refactored behavior.
-- Verify exit codes.
-- Verify generated commands.
-- Use mocked external services when appropriate.
-- Never execute destructive infrastructure operations.
-- Preserve failure handling.
-- Stop if behavior differs unexpectedly.
+- Verify inputs, outputs, exit codes, and failure handling.
+- Verify generated commands and external dependencies.
+- Use mocks when appropriate.
+- Stop if unexpected behavior changes.
 
-### Phase 6: Review
+### Phase 6 - Report
 
-- Show Git diff --stat.
-- Show exact files changed.
-- Explain what was simplified.
-- Identify any unverified behavior.
-- Recommend additional checks when needed.
+Provide:
+
+- Original and updated complexity.
+- Exact files changed.
+- Git diff --stat and --numstat.
+- Validation and regression results.
+- Remaining risks and recommended next actions.
 
 ## Safety
 
