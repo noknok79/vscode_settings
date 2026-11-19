@@ -1,5 +1,24 @@
 # Unified VS Code + GitHub Copilot Backup, Verification and Restoration
 
+> **Current verified Source Machine backup (19 November 2026)**
+>
+> Repository: `noknok79/vscode_settings`
+>
+> Branch: `main`
+>
+> Verified commit: `323992d3954a0ad63689e1e56218aa3c0fdf14ac`
+>
+> The existing historical checkpoints below are retained for
+> audit and recovery history. Use the current verified commit
+> when preparing a new recovery unless a newer approved
+> commit has been independently verified.
+>
+> Source Machine validation: GitHub synchronization PASS;
+> synthetic restoration and rollback PASS (9 files).
+> Cross-machine restoration remains unverified.
+
+
+
 **Updated:** 13 November 2026 (automated restoration quick-start edition)  
 **Repository:** `noknok79/vscode_settings` (`main`)  
 **Verified recovery commit:** `68c5b1bf2e8c6072116de552eab4e51a10c0daef`
@@ -828,3 +847,237 @@ Maintenance and reporting never automatically commit, push, deploy, or overwrite
 ---
 
 **Maintenance note:** This README documents the sanitized GitHub recovery baseline verified on 13 November 2026. Update the checkpoint and toolchain version evidence after future approved backups. Do not republish the private historical recovery mirror or bundle.
+
+
+## 13. First-Time Setup on a New Machine
+
+Use this procedure when installing the configuration on a new Target Machine running Windows.
+
+### 13.1 Install prerequisites
+
+Install Windows VS Code Stable, Git, Python 3, and WSL Ubuntu.
+
+Verify from Windows PowerShell:
+
+```powershell
+git --version
+python --version
+wsl --list --verbose
+```
+
+Verify from WSL Ubuntu:
+
+```bash
+git --version
+python3 --version
+whoami
+```
+
+Configure personal GitHub SSH authentication without replacing other identities.
+
+### 13.2 Clone the repository
+
+From the intended WSL Ubuntu account:
+
+```bash
+git clone git@github-noknok79:noknok79/vscode_settings.git ~/vscode_settings_clean
+cd ~/vscode_settings_clean
+git status --short
+git rev-parse HEAD
+```
+
+Record the selected commit.
+
+Verified Source Machine checkpoint:
+
+```text
+323992d3954a0ad63689e1e56218aa3c0fdf14ac
+```
+
+This checkpoint is historical after newer commits are published.
+
+### 13.3 Prepare restoration
+
+From standalone Windows PowerShell, use a reviewed Windows-accessible directory containing:
+
+- `Restore-Copilot.ps1`
+- `restore.sh`
+- `restore_files.py`
+
+Check the installed WSL distribution:
+
+```powershell
+wsl.exe --list --verbose
+```
+
+Start with the read-only audit:
+
+```powershell
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Audit
+```
+
+Replace `Ubuntu` with the installed distribution name.
+
+The supported modes are:
+
+| Mode | Purpose |
+|---|---|
+| Audit | Inspect prerequisites |
+| Install | Install separately approved dependencies |
+| Restore | Prepare and restore configuration |
+| Full | Combined workflow with approval prompts |
+
+### 13.4 Preserve existing settings
+
+Before restoration:
+
+1. Back up Windows VS Code settings.
+2. Back up existing WSL Copilot configuration.
+3. Record current file hashes.
+4. Close VS Code and Copilot CLI.
+5. Pause Settings Sync if appropriate.
+6. Review the destination paths.
+
+Never restore credentials, SSH private keys, tokens, or session databases.
+
+### 13.5 Restore and verify
+
+After reviewing the scripts and prerequisites:
+
+```powershell
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Restore
+```
+
+Follow the launcher's approval prompts.
+
+Review the generated `plan.json` before authorizing file replacement.
+
+After restoration, verify:
+
+- File SHA-256 hashes
+- VS Code settings
+- GitHub Copilot authentication
+- Agents, prompts, instructions, and skills
+- Required DevSecOps tools
+- Hook and MCP behavior where applicable
+
+Preserve `rollback.json` and verification reports.
+
+Do not claim complete recovery until runtime checks pass.
+
+---
+
+## 14. Updating an Existing Machine
+
+Use this procedure when the machine already has the repository and existing VS Code or Copilot settings.
+
+### 14.1 Inspect the existing repository
+
+From WSL Ubuntu:
+
+```bash
+cd ~/vscode_settings_clean
+git branch --show-current
+git rev-parse HEAD
+git status --short
+```
+
+If local changes exist, preserve them before updating.
+
+### 14.2 Check GitHub for updates
+
+```bash
+git ls-remote origin refs/heads/main
+```
+
+Compare the remote commit with:
+
+```bash
+git rev-parse HEAD
+```
+
+If the commits match, no repository update is required.
+
+### 14.3 Back up existing configuration
+
+Before applying newer configuration:
+
+- Preserve Windows VS Code settings and keybindings.
+- Preserve WSL Copilot customizations.
+- Record file hashes.
+- Preserve machine-specific configuration.
+- Keep rollback evidence outside the directories being replaced.
+
+### 14.4 Update safely
+
+Only after confirming a clean working tree:
+
+```bash
+git fetch origin main
+git log --oneline --left-right HEAD...origin/main
+```
+
+If the update is a safe fast-forward:
+
+```bash
+git merge --ff-only origin/main
+```
+
+If Git reports divergence, stop and investigate.
+
+Never use `git reset --hard` to force synchronization.
+
+### 14.5 Review and apply configuration updates
+
+A newer Git checkout does not automatically update active VS Code or Copilot settings.
+
+Use the restoration launcher:
+
+```powershell
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Audit
+```
+
+Then, after reviewing the update scope:
+
+```powershell
+.\Restore-Copilot.ps1 -Distro Ubuntu -Mode Restore
+```
+
+Review the generated plan and approve only intended replacements.
+
+### 14.6 Verify and roll back
+
+After applying updates:
+
+1. Verify restored file hashes.
+2. Confirm VS Code launches.
+3. Confirm Copilot authentication.
+4. Verify prompts, agents, skills, and instructions.
+5. Run relevant DevSecOps validation.
+6. Preserve the restoration reports.
+
+If restoration fails, use the documented rollback workflow from Section 4.
+
+Do not manually delete configuration directories.
+
+---
+
+### Current Source Machine Backup Checkpoint
+
+The following commit was verified and pushed from the Source Machine WSL Ubuntu:
+
+```text
+Repository: noknok79/vscode_settings
+Branch: main
+Commit: 323992d3954a0ad63689e1e56218aa3c0fdf14ac
+```
+
+The Source Machine validation included:
+
+- Successful GitHub push and remote verification.
+- Clean Git working tree.
+- Gitleaks validation.
+- Synthetic restoration of nine files.
+- Synthetic verification and rollback.
+
+Cross-machine restoration remains unverified until completed on the destination machine.
